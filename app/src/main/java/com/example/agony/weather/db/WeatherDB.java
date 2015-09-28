@@ -6,8 +6,9 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 
 import com.example.agony.weather.model.City;
-import com.example.agony.weather.model.Country;
+import com.example.agony.weather.model.County;
 import com.example.agony.weather.model.Province;
+import com.example.agony.weather.util.LogUtil;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -17,6 +18,8 @@ import java.util.List;
  * Created by Agony on 2015/9/27 0027.
  */
 public class WeatherDB {
+
+    public static final String TAG = "WeatherDB";
 
     public static final String DB_NAME = "weather";
     public static final int DB_VERSION = 1;
@@ -31,7 +34,7 @@ public class WeatherDB {
      * @param context ApplicationContext
      */
     private WeatherDB(Context context) {
-        LocaleOpenHelper dbHelper = new LocaleOpenHelper(context, DB_NAME, null, DB_VERSION);
+        LocationOpenHelper dbHelper = new LocationOpenHelper(context, DB_NAME, null, DB_VERSION);
         db = dbHelper.getWritableDatabase();
     }
 
@@ -60,6 +63,7 @@ public class WeatherDB {
             values.put("province_code", province.getProvinceCode());
             db.insert("province", null, values);
         }
+        LogUtil.d(TAG, province.toString());
     }
 
     /**
@@ -82,6 +86,7 @@ public class WeatherDB {
         if (cursor != null) {
             cursor.close();
         }
+        LogUtil.d(TAG, list.toString());
         return list;
     }
 
@@ -98,6 +103,7 @@ public class WeatherDB {
             values.put("province_id", city.getProvinceId());
             db.insert("city", null, values);
         }
+        LogUtil.d(TAG, city.toString());
     }
 
     /**
@@ -121,45 +127,48 @@ public class WeatherDB {
         if (cursor != null) {
             cursor.close();
         }
+        LogUtil.d(TAG, list.toString());
         return list;
     }
 
     /**
-     * save country to database
+     * save county to database
      *
-     * @param country
+     * @param county
      */
-    public void saveCountry(Country country) {
-        if (country != null) {
+    public void saveCountry(County county) {
+        if (county != null) {
             ContentValues values = new ContentValues();
-            values.put("country_name", country.getCountryName());
-            values.put("country_code", country.getCountryCode());
-            values.put("city_id", country.getCityId());
-            db.insert("country", null, values);
+            values.put("county_name", county.getCountyName());
+            values.put("county_code", county.getCountyCode());
+            values.put("city_id", county.getCityId());
+            db.insert("county", null, values);
         }
+        LogUtil.d(TAG, county.toString());
     }
 
     /**
-     * get countries from database
+     * get counties from database
      *
      * @param cityId
-     * @return countries
+     * @return counties
      */
-    public List<Country> loadCountries(int cityId) {
-        List<Country> list = new ArrayList<>();
-        Cursor cursor = db.query("country", null, "city_id = ?", new String[]{String.valueOf(cityId)}, null, null, null);
+    public List<County> loadCounties(int cityId) {
+        List<County> list = new ArrayList<>();
+        Cursor cursor = db.query("county", null, "city_id = ?", new String[]{String.valueOf(cityId)}, null, null, null);
         if (cursor.moveToFirst()) {
             do {
-                Country country = new Country();
-                country.setCountryName(cursor.getString(cursor.getColumnIndex("country_name")));
-                country.setCountryCode(cursor.getString(cursor.getColumnIndex("country_code")));
-                country.setCityId(cursor.getInt(cursor.getColumnIndex("city_id")));
-                list.add(country);
+                County county = new County();
+                county.setCountyName(cursor.getString(cursor.getColumnIndex("county_name")));
+                county.setCountyCode(cursor.getString(cursor.getColumnIndex("county_code")));
+                county.setCityId(cursor.getInt(cursor.getColumnIndex("city_id")));
+                list.add(county);
             } while (cursor.moveToNext());
         }
         if (cursor != null) {
             cursor.close();
         }
+        LogUtil.d(TAG, list.toString());
         return list;
     }
 }

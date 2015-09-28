@@ -4,15 +4,19 @@ import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 
+import com.example.agony.weather.util.LogUtil;
+
 /**
- * Locale the province&city&country
+ * The province&city&county Location
  * Created by Agony on 2015/9/27 0027.
  */
-public class LocaleOpenHelper extends SQLiteOpenHelper {
+public class LocationOpenHelper extends SQLiteOpenHelper {
+
+    public static final String TAG = "LocationOpenHelper";
 
     //SQL
     public static final String CREATE_PROVINCE = "create table province(" +
-            "id integer primary key antoincrement," +
+            "id integer primary key autoincrement," +
             "province_name text," +
             "province_code text)";
     public static final String CREATE_CITY = "create table city(" +
@@ -20,13 +24,13 @@ public class LocaleOpenHelper extends SQLiteOpenHelper {
             "city_name text," +
             "city_code text," +
             "province_id integer)";
-    public static final String CREATE_COUNTRY = "create table country(" +
+    public static final String CREATE_COUNTY = "create table county(" +
             "id integer primary key autoincrement," +
-            "country_name text," +
-            "country_code text," +
+            "county_name text," +
+            "county_code text," +
             "city_id integer)";
 
-    public LocaleOpenHelper(Context context, String name, SQLiteDatabase.CursorFactory factory, int version) {
+    public LocationOpenHelper(Context context, String name, SQLiteDatabase.CursorFactory factory, int version) {
         super(context, name, factory, version);
     }
 
@@ -35,7 +39,8 @@ public class LocaleOpenHelper extends SQLiteOpenHelper {
         // execute SQL
         db.execSQL(CREATE_PROVINCE);
         db.execSQL(CREATE_CITY);
-        db.execSQL(CREATE_COUNTRY);
+        db.execSQL(CREATE_COUNTY);
+        LogUtil.d(TAG, "OnCreate Successful");
     }
 
     @Override
