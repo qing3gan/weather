@@ -2,7 +2,10 @@ package com.example.agony.weather.activity;
 
 import android.app.Activity;
 import android.app.ProgressDialog;
+import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.text.TextUtils;
 import android.view.View;
 import android.view.Window;
@@ -12,6 +15,7 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.agony.weather.BuildConfig;
 import com.example.agony.weather.R;
 import com.example.agony.weather.db.WeatherDB;
 import com.example.agony.weather.model.City;
@@ -34,8 +38,7 @@ public class ChooseAreaActivity extends Activity {
     //Control Level
     public static final int LEVEL_PROVINCE = 0;
     public static final int LEVEL_CITY = 1;
-    public static final int LELVE_COUNTY = 2;
-    public static final String CITY_SERVER = "http://www.weather.com.cn/data/list3/city";
+    public static final int LEVEL_COUNTY = 2;
 
     //Database
     private WeatherDB weatherDB;
@@ -64,6 +67,12 @@ public class ChooseAreaActivity extends Activity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(this);
+        if (preferences.getBoolean("city_selected", false)) {
+            Intent intent = new Intent(this, WeatherActivity.class);
+            startActivity(intent);
+            finish();
+        }
         //This
         requestWindowFeature(Window.FEATURE_NO_TITLE);
         setContentView(R.layout.choose_area);
@@ -82,6 +91,12 @@ public class ChooseAreaActivity extends Activity {
                 } else if (currentLevel == LEVEL_CITY) {
                     selectedCity = cityList.get(position);
                     queryCounties();
+                } else if (currentLevel == LEVEL_COUNTY) {
+                    String countyCode = countyList.get(position).getCountyCode();
+                    Intent intent = new Intent(ChooseAreaActivity.this, WeatherActivity.class);
+                    intent.putExtra("county_code", countyCode);
+                    startActivity(intent);
+                    finish();
                 }
             }
         });
@@ -140,7 +155,7 @@ public class ChooseAreaActivity extends Activity {
             adapter.notifyDataSetChanged();
             lvList.setSelection(0);
             tvTitle.setText(selectedCity.getCityName());
-            currentLevel = LELVE_COUNTY;
+            currentLevel = LEVEL_COUNTY;
         } else {
             queryFromServer(selectedCity.getCityCode(), "county");
         }
@@ -157,9 +172,9 @@ public class ChooseAreaActivity extends Activity {
         String address;
         //Almost Not Null
         if (!TextUtils.isEmpty(code)) {
-            address = CITY_SERVER + code + ".xml";
+            address = BuildConfig.SERVER_CITY_ADDRESS + code + ".xml";
         } else {
-            address = CITY_SERVER + ".xml";
+            address = BuildConfig.SERVER_CITY_ADDRESS + ".xml";
         }
         showProgressDialog();
         //Anonymous Is Simple Then Implements
@@ -222,7 +237,7 @@ public class ChooseAreaActivity extends Activity {
     //Adpater
     @Override
     public void onBackPressed() {
-        if (currentLevel == LELVE_COUNTY) {
+        if (currentLevel == LEVEL_COUNTY) {
             queryCities();
         } else if (currentLevel == LEVEL_CITY) {
             queryProvinces();

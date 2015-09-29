@@ -1,11 +1,21 @@
 package com.example.agony.weather.util;
 
+import android.content.Context;
+import android.content.SharedPreferences;
+import android.preference.PreferenceManager;
 import android.text.TextUtils;
 
 import com.example.agony.weather.db.WeatherDB;
 import com.example.agony.weather.model.City;
 import com.example.agony.weather.model.County;
 import com.example.agony.weather.model.Province;
+
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.Locale;
 
 /**
  * Parse And Store Location Data Util
@@ -14,7 +24,7 @@ import com.example.agony.weather.model.Province;
 public class ParseUtil {
 
     /**
-     * Handle Provinces Response To Database
+     * Handle Provinces Response To Database(Persistence)
      *
      * @param weatherDB
      * @param response
@@ -38,7 +48,7 @@ public class ParseUtil {
     }
 
     /**
-     * Handle Cities Response To Database
+     * Handle Cities Response To Database(Persistence)
      *
      * @param weatherDB
      * @param response
@@ -64,7 +74,7 @@ public class ParseUtil {
     }
 
     /**
-     * Handle Counties Response To Database
+     * Handle Counties Response To Database(Persistence)
      *
      * @param weatherDB
      * @param response
@@ -87,5 +97,53 @@ public class ParseUtil {
             }
         }
         return false;
+    }
+
+    /**
+     * Handle Weather JSON Response To Database(Update)
+     *
+     * @param context
+     * @param response
+     */
+    public static void handleWeatherResponse(Context context, String response) {
+        try {
+            JSONObject jsonObject = new JSONObject(response);
+            JSONObject weatherInfo = jsonObject.getJSONObject("weatherinfo");
+            String cityName = weatherInfo.getString("city");
+            String weatherCode = weatherInfo.getString("cityid");
+            String temp1 = weatherInfo.getString("temp1");
+            String temp2 = weatherInfo.getString("temp2");
+            String weatherDesp = weatherInfo.getString("weather");
+            String publishTime = weatherInfo.getString("ptime");
+            saveWeatherInfo(context, cityName, weatherCode, temp1, temp2, weatherDesp, publishTime);
+        } catch (JSONException e) {
+            //Catch Immediately
+            e.printStackTrace();
+        }
+    }
+
+    /**
+     * Save Weather Info To SharedPreferences(Update)
+     *
+     * @param context
+     * @param cityName
+     * @param weatherCode
+     * @param temp1
+     * @param temp2
+     * @param weatherDesp
+     * @param publishTime
+     */
+    private static void saveWeatherInfo(Context context, String cityName, String weatherCode, String temp1, String temp2, String weatherDesp, String publishTime) {
+        SimpleDateFormat format = new SimpleDateFormat("yyyy年M月d日", Locale.CHINA);
+        SharedPreferences.Editor editor = PreferenceManager.getDefaultSharedPreferences(context).edit();
+        editor.putBoolean("city_selected", true);
+        editor.putString("city_name", cityName);
+        editor.putString("weather_code", weatherCode);
+        editor.putString("temp1", temp1);
+        editor.putString("temp2", temp2);
+        editor.putString("weather_desp", weatherDesp);
+        editor.putString("publish_time", publishTime);
+        editor.putString("current_date", format.format(new Date()));
+        editor.commit();
     }
 }

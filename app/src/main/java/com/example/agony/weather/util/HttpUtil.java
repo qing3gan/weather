@@ -36,8 +36,8 @@ public class HttpUtil {
                     BufferedReader br = new BufferedReader(new InputStreamReader(in));
                     //StringBuffer(thread safe) → StringBuilder(not thread safe)
                     StringBuilder response = new StringBuilder();
-                    //Initial avoid dump data
-                    String line = null;
+                    //Assignment is ok(Initial avoid dump data for arithmetic operation and null for var.invoke)
+                    String line;
                     while ((line = br.readLine()) != null) {
                         response.append(line);
                     }

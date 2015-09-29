@@ -16,6 +16,12 @@ android {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
+        debug {
+            //city info(|)
+            buildConfigField "String", "SERVER_CITY_ADDRESS", "\"http://www.weather.com.cn/data/list3/city\""
+            //weather info(json)
+            buildConfigField "String", "SERVER_WEATHER_ADDRESS", "\"http://www.weather.com.cn/data/cityinfo/\""
+        }
     }
 }
 
