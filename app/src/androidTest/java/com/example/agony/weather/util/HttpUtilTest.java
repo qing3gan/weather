@@ -11,7 +11,8 @@ public class HttpUtilTest extends InstrumentationTestCase {
     public static final String TAG = "HttpUtilTest";
 
     public void testSendHttpRequest() throws Exception {
-        String address = "http://www.weather.com.cn/data/list3/city.xml";
+//        String address = "http://www.weather.com.cn/data/list3/city190201.xml";
+        String address = "http://www.weather.com.cn/data/cityinfo/101190201.html";
         HttpUtil.sendHttpRequest(address, new HttpCallbackListener() {
             @Override
             public void onSuccess(String response) {
@@ -24,4 +25,5 @@ public class HttpUtilTest extends InstrumentationTestCase {
             }
         });
     }
+
 }

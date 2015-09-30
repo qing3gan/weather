@@ -23,6 +23,7 @@ import com.example.agony.weather.model.County;
 import com.example.agony.weather.model.Province;
 import com.example.agony.weather.util.HttpCallbackListener;
 import com.example.agony.weather.util.HttpUtil;
+import com.example.agony.weather.util.LogUtil;
 import com.example.agony.weather.util.ParseUtil;
 
 import java.util.ArrayList;
@@ -85,6 +86,8 @@ public class ChooseAreaActivity extends Activity {
         lvList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                //String const + String var = Two String Object
+                //String const + String const = One String Object
                 if (currentLevel == LEVEL_PROVINCE) {
                     selectedProvince = provinceList.get(position);
                     queryCities();
@@ -98,10 +101,12 @@ public class ChooseAreaActivity extends Activity {
                     startActivity(intent);
                     finish();
                 }
+                LogUtil.d(TAG, "Current Level " + String.valueOf(currentLevel));
             }
         });
         //Default
         queryProvinces();
+        LogUtil.d(TAG, "Current Level " + String.valueOf(currentLevel));
     }
 
     /**
@@ -109,6 +114,7 @@ public class ChooseAreaActivity extends Activity {
      */
     private void queryProvinces() {
         provinceList = weatherDB.loadProvinces();
+        LogUtil.d(TAG, "Query Province From Database " + provinceList.toString());
         if (provinceList.size() > 0) {
             dataList.clear();
             for (Province province : provinceList) {
@@ -128,6 +134,7 @@ public class ChooseAreaActivity extends Activity {
      */
     private void queryCities() {
         cityList = weatherDB.loadCities(selectedProvince.getId());
+        LogUtil.d(TAG, "Query City From Database " + cityList.toString());
         if (cityList.size() > 0) {
             dataList.clear();
             for (City city : cityList) {
@@ -147,6 +154,7 @@ public class ChooseAreaActivity extends Activity {
      */
     private void queryCounties() {
         countyList = weatherDB.loadCounties(selectedCity.getId());
+        LogUtil.d(TAG, "Query County From Database " + countyList.toString());
         if (countyList.size() > 0) {
             dataList.clear();
             for (County county : countyList) {
@@ -176,6 +184,7 @@ public class ChooseAreaActivity extends Activity {
         } else {
             address = BuildConfig.SERVER_CITY_ADDRESS + ".xml";
         }
+        LogUtil.d(TAG, "Query From Server " + address);
         showProgressDialog();
         //Anonymous Is Simple Then Implements
         HttpUtil.sendHttpRequest(address, new HttpCallbackListener() {

@@ -14,12 +14,15 @@ import com.example.agony.weather.BuildConfig;
 import com.example.agony.weather.R;
 import com.example.agony.weather.util.HttpCallbackListener;
 import com.example.agony.weather.util.HttpUtil;
+import com.example.agony.weather.util.LogUtil;
 import com.example.agony.weather.util.ParseUtil;
 
 /**
  * Created by Agony on 2015/9/29 0029.
  */
 public class WeatherActivity extends Activity {
+
+    public static final String TAG = "WeatherActivity";
 
     private LinearLayout llWeatherInfo;
     private TextView tvCityName, tvPublishTime, tvWeatherDesp, tvTemp1, tvTemp2, tvCurrentDate;
@@ -91,12 +94,13 @@ public class WeatherActivity extends Activity {
                 if ("countyCode".equals(type)) {
                     if (!TextUtils.isEmpty(response)) {
                         String[] array = response.split("\\|");
-                        if (array != null & array.length == 2) {
+                        if (array != null && array.length == 2) {
                             String weatherCode = array[1];
                             queryWeatherInfo(weatherCode);
                         }
                     }
                 } else if ("weatherCode".equals(type)) {
+                    LogUtil.d(TAG, "Weather Info " + response);
                     ParseUtil.handleWeatherResponse(WeatherActivity.this, response);
                     //main thread → ui thread → sub thread
                     runOnUiThread(new Runnable() {

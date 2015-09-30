@@ -82,7 +82,7 @@ public class ParseUtil {
      * @return true if handle success
      */
     public synchronized static boolean handleCountriesResponse(WeatherDB weatherDB, String response, int cityId) {
-        if (TextUtils.isEmpty(response)) {
+        if (!TextUtils.isEmpty(response)) {
             String[] allCounties = response.split(",");
             if (allCounties != null && allCounties.length > 0) {
                 for (String c : allCounties) {
@@ -91,7 +91,7 @@ public class ParseUtil {
                     county.setCountyCode(array[0]);
                     county.setCountyName(array[1]);
                     county.setCityId(cityId);
-                    weatherDB.saveCountry(county);
+                    weatherDB.saveCounty(county);
                 }
                 return true;
             }

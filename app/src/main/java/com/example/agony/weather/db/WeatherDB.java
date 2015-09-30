@@ -63,7 +63,7 @@ public class WeatherDB {
             values.put("province_code", province.getProvinceCode());
             db.insert("province", null, values);
         }
-        LogUtil.d(TAG, province.toString());
+        LogUtil.d(TAG, "Save Province To Database " + province.toString());
     }
 
     /**
@@ -86,7 +86,7 @@ public class WeatherDB {
         if (cursor != null) {
             cursor.close();
         }
-        LogUtil.d(TAG, list.toString());
+        LogUtil.d(TAG, "Load Province From Database " + list.toString());
         return list;
     }
 
@@ -103,7 +103,7 @@ public class WeatherDB {
             values.put("province_id", city.getProvinceId());
             db.insert("city", null, values);
         }
-        LogUtil.d(TAG, city.toString());
+        LogUtil.d(TAG, "Save City To Database " + city.toString());
     }
 
     /**
@@ -127,7 +127,7 @@ public class WeatherDB {
         if (cursor != null) {
             cursor.close();
         }
-        LogUtil.d(TAG, list.toString());
+        LogUtil.d(TAG, "Load City From Database " + list.toString());
         return list;
     }
 
@@ -136,7 +136,7 @@ public class WeatherDB {
      *
      * @param county
      */
-    public void saveCountry(County county) {
+    public void saveCounty(County county) {
         if (county != null) {
             ContentValues values = new ContentValues();
             values.put("county_name", county.getCountyName());
@@ -144,7 +144,7 @@ public class WeatherDB {
             values.put("city_id", county.getCityId());
             db.insert("county", null, values);
         }
-        LogUtil.d(TAG, county.toString());
+        LogUtil.d(TAG, "Save County To Database " + county.toString());
     }
 
     /**
@@ -168,7 +168,7 @@ public class WeatherDB {
         if (cursor != null) {
             cursor.close();
         }
-        LogUtil.d(TAG, list.toString());
+        LogUtil.d(TAG, "Load County From Database " + list.toString());
         return list;
     }
 }
