@@ -14,6 +14,7 @@ import android.widget.TextView;
 
 import com.example.agony.weather.BuildConfig;
 import com.example.agony.weather.R;
+import com.example.agony.weather.service.AutoUpdateService;
 import com.example.agony.weather.util.HttpCallbackListener;
 import com.example.agony.weather.util.HttpUtil;
 import com.example.agony.weather.util.LogUtil;
@@ -62,6 +63,8 @@ public class WeatherActivity extends Activity implements View.OnClickListener {
         tvCurrentDate.setText(preferences.getString("current_date", ""));
         llWeatherInfo.setVisibility(View.VISIBLE);
         tvCityName.setVisibility(View.VISIBLE);
+        Intent intent = new Intent(this, AutoUpdateService.class);
+        startService(intent);
     }
 
     /**

@@ -21,6 +21,8 @@ android {
             buildConfigField "String", "SERVER_CITY_ADDRESS", "\"http://www.weather.com.cn/data/list3/city\""
             //weather info(json)
             buildConfigField "String", "SERVER_WEATHER_ADDRESS", "\"http://www.weather.com.cn/data/cityinfo/\""
+            //alarm time
+            buildConfigField "int", "ALARM_TIME", "8*60*60*1000"
         }
     }
 }
