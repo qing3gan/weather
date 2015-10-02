@@ -45,6 +45,6 @@ public class LocationOpenHelper extends SQLiteOpenHelper {
 
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
-
+        LogUtil.d(TAG, "OnUpgrade Successful");
     }
 }

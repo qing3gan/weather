@@ -9,6 +9,15 @@
         android:layout_height="50dp"
         android:background="#33ab83">
 
+        <Button
+            android:id="@+id/btn_switch_city"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="10dp"
+            android:layout_marginStart="10dp"
+            android:background="@drawable/home" />
+
         <TextView
             android:id="@+id/tv_city_name"
             android:layout_width="wrap_content"
@@ -16,6 +25,16 @@
             android:layout_centerInParent="true"
             android:textColor="#fff"
             android:textSize="24sp" />
+
+        <Button
+            android:id="@+id/btn_refresh_weather"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:layout_marginEnd="10dp"
+            android:layout_marginRight="10dp"
+            android:background="@drawable/refresh" />
     </RelativeLayout>
 
     <RelativeLayout
@@ -30,6 +49,7 @@
             android:layout_height="wrap_content"
             android:layout_alignParentRight="true"
             android:layout_marginRight="10dp"
+            android:layout_marginEnd="10dp"
             android:layout_marginTop="10dp"
             android:scrollbarSize="18sp"
             android:textColor="#fff" />

@@ -1,12 +1,14 @@
 package com.example.agony.weather.activity;
 
 import android.app.Activity;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.text.TextUtils;
 import android.view.View;
 import android.view.Window;
+import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
@@ -20,12 +22,13 @@ import com.example.agony.weather.util.ParseUtil;
 /**
  * Created by Agony on 2015/9/29 0029.
  */
-public class WeatherActivity extends Activity {
+public class WeatherActivity extends Activity implements View.OnClickListener {
 
     public static final String TAG = "WeatherActivity";
 
     private LinearLayout llWeatherInfo;
     private TextView tvCityName, tvPublishTime, tvWeatherDesp, tvTemp1, tvTemp2, tvCurrentDate;
+    private Button btnSwitchCity, btnRefreshWeather;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -33,6 +36,7 @@ public class WeatherActivity extends Activity {
         requestWindowFeature(Window.FEATURE_NO_TITLE);
         setContentView(R.layout.weather_layout);
         initViews();
+        initEvents();
         String countyCode = getIntent().getStringExtra("county_code");
         if (!TextUtils.isEmpty(countyCode)) {
             tvPublishTime.setText("Synchronizing...");
@@ -51,7 +55,7 @@ public class WeatherActivity extends Activity {
     private void showWeatherInfo() {
         SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(this);
         tvCityName.setText(preferences.getString("city_name", ""));
-        tvPublishTime.setText("Today " + preferences.getString("publish_time", "") + " publish");
+        tvPublishTime.setText("Today " + preferences.getString("publish_time", "") + " published");
         tvWeatherDesp.setText(preferences.getString("weather_desp", ""));
         tvTemp1.setText(preferences.getString("temp1", ""));
         tvTemp2.setText(preferences.getString("temp2", ""));
@@ -67,6 +71,7 @@ public class WeatherActivity extends Activity {
      */
     private void queryWeatherCode(String countyCode) {
         String address = BuildConfig.SERVER_CITY_ADDRESS + countyCode + ".xml";
+        LogUtil.d(TAG, "Query Weather Code By County Code " + address);
         queryFromServer(address, "countyCode");
     }
 
@@ -77,6 +82,7 @@ public class WeatherActivity extends Activity {
      */
     private void queryWeatherInfo(String weatherCode) {
         String address = BuildConfig.SERVER_WEATHER_ADDRESS + weatherCode + ".html";
+        LogUtil.d(TAG, "Query Weather Info By Weather Code " + address);
         queryFromServer(address, "weatherCode");
     }
 
@@ -127,5 +133,34 @@ public class WeatherActivity extends Activity {
         tvTemp1 = (TextView) findViewById(R.id.tv_temp1);
         tvTemp2 = (TextView) findViewById(R.id.tv_temp2);
         tvCurrentDate = (TextView) findViewById(R.id.tv_current_date);
+        btnSwitchCity = (Button) findViewById(R.id.btn_switch_city);
+        btnRefreshWeather = (Button) findViewById(R.id.btn_refresh_weather);
+    }
+
+    private void initEvents() {
+        btnSwitchCity.setOnClickListener(this);
+        btnRefreshWeather.setOnClickListener(this);
+    }
+
+    @Override
+    public void onClick(View v) {
+        switch (v.getId()) {
+            case R.id.btn_switch_city:
+                Intent intent = new Intent(this, ChooseAreaActivity.class);
+                intent.putExtra("from_weather_activity", true);
+                startActivity(intent);
+                finish();
+                break;
+            case R.id.btn_refresh_weather:
+                tvPublishTime.setText("Synchronizing...");
+                SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(this);
+                String weatherCode = preferences.getString("weather_code", "");
+                if (!TextUtils.isEmpty(weatherCode)) {
+                    queryWeatherInfo(weatherCode);
+                }
+                break;
+            default:
+                break;
+        }
     }
 }
